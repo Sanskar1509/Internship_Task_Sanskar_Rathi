@@ -1,0 +1,155 @@
+							TASK 2 
+
+1. Retrieve the names and contact details of all drivers with a rating of 4.5 or higher.
+
+	SELECT FirstName, LastName, Phone, Rating
+	FROM Drivers
+	WHERE Rating >= 4.5;
+
+2. Find the total number of rides completed by each driver.
+
+	SELECT 
+	    d.DriverID,
+	    CONCAT(d.FirstName, ' ', d.LastName) AS DriverName,
+	    COUNT(r.RideID) AS TotalCompletedRides
+	FROM 
+	    Drivers d
+	LEFT JOIN 
+	    Rides r ON d.DriverID = r.DriverID
+	WHERE 
+	    r.RideStatus = 'Completed'
+	GROUP BY 
+	    d.DriverID, d.FirstName, d.LastName;
+
+3. List all riders who have never booked a ride.
+
+	SELECT 
+	    r.RiderID, 
+	    CONCAT(r.FirstName, ' ', r.LastName) AS RiderName, 
+	    r.Phone, 
+	    r.City
+	FROM 
+	    Riders r
+	LEFT JOIN 
+	    Rides ri ON r.RiderID = ri.RiderID
+	WHERE 
+	    ri.RideID IS NULL;
+
+4. Calculate the total earnings of each driver from completed rides.
+
+	SELECT 
+	    d.DriverID,
+	    CONCAT(d.FirstName, ' ', d.LastName) AS DriverName,
+	    SUM(p.Amount) AS TotalEarnings
+	FROM 
+	    Drivers d
+	LEFT JOIN 
+	    Rides r ON d.DriverID = r.DriverID
+	LEFT JOIN 
+	    Payments p ON r.RideID = p.RideID
+	WHERE 
+	    r.RideStatus = 'Completed'
+	GROUP BY 
+	    d.DriverID, d.FirstName, d.LastName;
+
+5. Retrieve the most recent ride for each rider.
+
+	SELECT 
+	    r.RiderID,
+	    CONCAT(rd.FirstName, ' ', rd.LastName) AS RiderName,
+	    r.RideID,
+	    r.RideDate,
+	    r.PickupLocation,
+	    r.DropLocation,
+	    r.Fare
+	FROM 
+	    Rides r
+	JOIN 
+	    Riders rd ON r.RiderID = rd.RiderID
+	WHERE 
+	    r.RideDate = (
+	        SELECT MAX(RideDate)
+	        FROM Rides
+	        WHERE RiderID = r.RiderID
+	    );
+
+6. Count the number of rides taken in each city.
+
+	SELECT 
+	    r.City,
+	    COUNT(ri.RideID) AS TotalRides
+	FROM 
+	    Riders r
+	JOIN 
+	    Rides ri ON r.RiderID = ri.RiderID
+	GROUP BY 
+	    r.City;
+
+7. List all rides where the distance was greater than 20 km.
+
+	SELECT 
+	    RideID,
+	    RideDate,
+	    PickupLocation,
+	    DropLocation,
+	    Distance,
+	    RideStatus
+	FROM 
+	    Rides
+	WHERE 
+	    Distance > 20;
+
+8. Identify the most preferred payment method.
+
+	SELECT 
+	    PaymentMethod,
+	    COUNT(PaymentID) AS UsageCount
+	FROM 
+	    Payments
+	GROUP BY 
+	    PaymentMethod
+	ORDER BY 
+	    UsageCount DESC
+	LIMIT 1;
+
+9. Find the top 3 highest-earning drivers.
+
+	SELECT 
+	    d.DriverID,
+	    CONCAT(d.FirstName, ' ', d.LastName) AS DriverName,
+	    SUM(p.Amount) AS TotalEarnings
+	FROM 
+	    Drivers d
+	JOIN 
+	    Rides r ON d.DriverID = r.DriverID
+	JOIN 
+	    Payments p ON r.RideID = p.RideID
+	WHERE 
+	    r.RideStatus = 'Completed'
+	GROUP BY 
+	    d.DriverID, d.FirstName, d.LastName
+	ORDER BY 
+	    TotalEarnings DESC
+	LIMIT 3;
+
+
+10. Retrieve details of all cancelled rides along with the rider's and driver's names.
+
+	SELECT 
+	    r.RideID,
+	    CONCAT(ri.FirstName, ' ', ri.LastName) AS RiderName,
+	    CONCAT(d.FirstName, ' ', d.LastName) AS DriverName,
+	    r.RideDate,
+	    r.PickupLocation,
+	    r.DropLocation,
+	    r.Distance,
+	    r.Fare,
+	    r.RideStatus
+	FROM 
+	    Rides r
+	JOIN 
+	    Riders ri ON r.RiderID = ri.RiderID
+	JOIN 
+	    Drivers d ON r.DriverID = d.DriverID
+	WHERE 
+	    r.RideStatus = 'Cancelled';

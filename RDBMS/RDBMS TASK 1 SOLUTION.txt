@@ -76,3 +76,49 @@
 	LIMIT 1;
 
 8. Find the Average Number of Credits Per Student in a Department
+	
+	SELECT 
+	    d.department_name,
+	    AVG(c.credits) AS average_credits_per_student
+	FROM 
+	    Departments d
+	JOIN 
+	    Students s ON d.department_id = s.department_id
+	JOIN 
+	    Enrollments e ON s.student_id = e.student_id
+	JOIN 
+	    Courses c ON e.course_id = c.course_id
+	GROUP BY 
+	    d.department_name;
+
+9. List All Professors Who Teach in More Than One Department
+
+	SELECT 
+	    p.professor_id, 
+	    p.first_name, 
+	    p.last_name, 
+	    COUNT(DISTINCT c.department_id) AS departments_count
+	FROM 
+	    Professors p
+	JOIN 
+	    Courses c ON p.professor_id = c.professor_id
+	GROUP BY 
+	    p.professor_id, p.first_name, p.last_name
+	HAVING 
+	    COUNT(DISTINCT c.department_id) > 1;
+
+10. Get the Highest and Lowest Grade in a Specific Course (e.g., 'Operating Systems')
+
+	SELECT 
+	    c.course_name,
+	    MAX(e.grade) AS highest_grade,
+	    MIN(e.grade) AS lowest_grade
+	FROM 
+	    Courses c
+	LEFT JOIN 
+	    Enrollments e ON c.course_id = e.course_id
+	WHERE 
+	    c.course_name = 'Linear Algebra'
+	  AND e.grade IS NOT NULL
+	GROUP BY 
+	    c.course_name;
