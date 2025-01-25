@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Finder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      color: #444;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #results {
+      margin-top: 20px;
+    }
+
+    #results p {
+      background: #f1f1f1;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 5px;
+    }
+
+    #results p:hover {
+      background: #e9e9e9;
+    }
+  </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Recipe Finder</h1>
+        <input id="ingredientInput" placeholder="Enter ingredients (comma-separated)" />
+        <select id="typeFilter">
+        <option value="">All</option>
+        <option value="Breakfast">Breakfast</option>
+        <option value="Lunch">Lunch</option>
+        <option value="Dinner">Dinner</option>
+        </select>
+        <button id="searchButton">Search</button>
+        <div id="results"></div>
+    </div>
+
+  <script>
+    const recipes = [
+      { name: "Pancakes", ingredients: ["flour", "milk", "egg"], type: "Breakfast" },
+      { name: "Grilled Cheese", ingredients: ["bread", "cheese", "butter"], type: "Lunch" },
+      { name: "Spaghetti", ingredients: ["pasta", "tomato", "cheese"], type: "Dinner" },
+    ];
+
+    function searchRecipes(input, filteredRecipes) {
+      const query = input.toLowerCase().split(",").map(item => item.trim());
+      return filteredRecipes.filter(recipe =>
+        query.every(ingredient => recipe.ingredients.includes(ingredient))
+      );
+    }
+
+    function filterRecipes(type) {
+      return type ? recipes.filter(recipe => recipe.type === type) : recipes;
+    }
+
+    function findRecipes(input, type) {
+      const filteredByType = filterRecipes(type);
+      return searchRecipes(input, filteredByType);
+    }
+
+    function displayResults(recipes) {
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = recipes.length
+        ? recipes.map(r => `<p>${r.name} (${r.type})</p>`).join("")
+        : "<p>No recipes found</p>";
+    }
+
+    document.getElementById("searchButton").addEventListener("click", () => {
+      const input = document.getElementById("ingredientInput").value;
+      const type = document.getElementById("typeFilter").value;
+      const results = findRecipes(input, type);
+      displayResults(results);
+    });
+  </script>
+</body>
+</html>
