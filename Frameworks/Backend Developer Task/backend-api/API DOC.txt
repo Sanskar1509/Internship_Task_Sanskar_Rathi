@@ -1,0 +1,76 @@
+1. Register  : http://localhost:5000/api/register
+	Method: POST
+	body: 
+		{
+			"username":"sanskar",
+			"email":"sanskar@gmail.com",
+			"password":"Sanskar@123",
+			"role":"admin"
+		}
+		
+2. Login : 	http://localhost:5000/api/login
+	Method: POST
+	body: 
+			{
+				"email":"sanskar1@gmail.com",
+				"password":"Sanskar@123"
+			
+			}
+
+3. Add Category : http://localhost:5000/api/categories
+	Method: POST
+	Authorization: Bearer Token
+	token: from the login token
+	body: 
+			{
+				"category_name":"Electircal"
+			}
+
+4.  Get Category  : 	http://localhost:5000/api/categories
+		Method: GET
+		Authorization: Bearer Token
+		token: from the login token
+		
+5.  Update Category :  http://localhost:5000/api/categories/category_id
+		Method: PUT
+		Authorization: Bearer Token
+		token: from the login token
+		Body: 
+				{
+					"category_name": "Advanced Carpentry"
+				}
+				
+6. Delete Category : http://localhost:5000/api/categories/category_id
+		Method: DELETE
+		Authorization: Bearer Token
+		token: from the login token
+		
+		
+7. Add Sub Category : http://localhost:5000/api/categories/category_id/subcategories
+	Method: POST
+	Authorization: Bearer Token
+	token: from the login token
+	body: 
+			{
+				"category_id":"67a64dfee5e05f919bc0f937",
+				"subcategory_name":"Commercial Plumbing"
+			}
+
+8.  Get Sub Category  : 	http://localhost:5000/api/categories/category_id/subcategories
+		Method: GET
+		Authorization: Bearer Token
+		token: from the login token
+		
+9.  Update Sub Category :  http://localhost:5000/api/subcategories/subcategory_id
+		Method: PUT
+		Authorization: Bearer Token
+		token: from the login token
+		Body: 
+				{
+					"subcategory_name":"Residential Plumbing"
+				}
+				
+10. Delete Sub Category : http://localhost:5000/api/subcategories/subcategory_id
+		Method: DELETE
+		Authorization: Bearer Token
+		token: from the login token
